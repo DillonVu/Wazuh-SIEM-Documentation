@@ -43,9 +43,6 @@ On the documentation website, there is a walkthrough on how to deploy an agent o
 
 <img width="788" height="207" alt="Screenshot 2026-11-03 at 14-47-28 Wazuh" src="https://github.com/user-attachments/assets/b277fd49-474e-42aa-9333-d648d4dc01c8" />
 
-<img width="831" height="198" alt="Screenshot 2026-11-03 at 14-33-25 Deploying Wazuh agents on Linux endpoints - Wazuh agent" src="https://github.com/user-attachments/assets/b9b1a1cb-affe-420b-8f15-2394c58a321b" />
-
-
 Now I am given an option to select which package i need to install; RPM AMD64, RPM AARCH64, DEB AMD64, DEB AARCH64. I chose to go with DEB AMD64
 
 Next I am instructed to input this command to start the installation of the agent:
@@ -56,7 +53,7 @@ I am receiving an error message saying; "sudo: dpkg: command not found"
 
 This error just means that dpkg isn't installed on my device, so instead we will be using Archlinux's native repository to install the agent.
 
-  sudo yay-S wazuh-agent
+  sudo yay -S wazuh-agent
 
 Starting up the agent gave an error message. 
 
@@ -101,3 +98,4 @@ Going back to the dashboard, it seems that the agent had successfully deployed a
 
 The endpoint has been successfully installed. 
 
+# Deploying an agent on Windows
