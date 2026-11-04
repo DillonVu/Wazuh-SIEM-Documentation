@@ -41,6 +41,11 @@ The dashboard has launched and login for the dashboard was simple as well.
 
 On the documentation website, there is a walkthrough on how to deploy an agent on different operating systems, but on the dashboard - there is already a section detailing how to deploy an agent. I will be following this method.
 
+<img width="788" height="207" alt="Screenshot 2026-11-03 at 14-47-28 Wazuh" src="https://github.com/user-attachments/assets/b277fd49-474e-42aa-9333-d648d4dc01c8" />
+
+<img width="831" height="198" alt="Screenshot 2026-11-03 at 14-33-25 Deploying Wazuh agents on Linux endpoints - Wazuh agent" src="https://github.com/user-attachments/assets/b9b1a1cb-affe-420b-8f15-2394c58a321b" />
+
+
 Now I am given an option to select which package i need to install; RPM AMD64, RPM AARCH64, DEB AMD64, DEB AARCH64. I chose to go with DEB AMD64
 
 Next I am instructed to input this command to start the installation of the agent:
@@ -81,11 +86,11 @@ and to confirm that it worked;
 
    grep -A3 '<server>' /var/ossec/etc/ossec.conf
 
-The command asks to return the information typed under the container server, in our case our IP address, meaning that the change worked. 
+The command asks to return the information typed under the container "<server">, in our case our IP address, meaning that the change worked. 
 
 Next, we need to enroll with manager;
 
-sudo /var/ossec/bin/agent-auth -m 192.168.1.173 -A arch.dillon
+sudo /var/ossec/bin/agent-auth -m xxx.xxx.x.xxx -A arch.dillon
 
 Once finished I restarted and agent to confirm all changes.
 
