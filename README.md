@@ -135,13 +135,13 @@ logs retuned as;
 2026/11/05 13:33:47 wazuh-agent: INFO: Trying to connect to server ([xxx.xxx.x.126]:1514/tcp).
 2026/11/05 13:34:08 wazuh-agent: ERROR: (1216): Unable to connect to '[xxx.xxx.x.126]:1514/tcp': 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.'.
 
-Immediate we see the problem, the agent is trying to connect to the IP ending with 126, and respond with nothing because nothing is there. We must reconfigure the IP to our currently active one. 
+Immediately we see the problem, the agent is trying to connect to the IP ending with 126, and respond with nothing because nothing is there. We must reconfigure the IP to our currently active one. 
 
 In the admin powershell run;
 
 notepad "C:\Program Files (x86)\ossec-agent\ossec.conf"
 
-This command opens this file section, within it we can look under the <server> tag and manually change our IP address to the right one. 
+This command opens this configuration file using notepad, within it we can look under the <server> block and manually change our IP address to the right one. 
 
 Once we change it, we save and restart the service.
 
@@ -150,4 +150,8 @@ Get-Content "C:\Program Files (x86)\ossec-agent\ossec.log" -Tail 20
 
 And now the agent is showing up on the dashboard, which mean the installation is complete. 
 
-# Integrating VirusTotal and Automation 
+# Integrating File Integrity Monitoring with Wazuh FIM
+
+https://documentation.wazuh.com/current/proof-of-concept-guide/poc-file-integrity-monitoring.html
+
+
