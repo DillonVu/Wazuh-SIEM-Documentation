@@ -49,7 +49,7 @@ Now I am given an option to select which package i need to install; RPM AMD64, R
 
 Next I am instructed to input this command to start the installation of the agent:
 
-wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.14.9-1_amd64.deb && sudo WAZUH_MANAGER='192.168.1.173' WAZUH_AGENT_NAME='arch.dillon' dpkg -i ./wazuh-agent_4.14.9-1_amd64.deb
+wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.14.9-1_amd64.deb && sudo WAZUH_MANAGER='xxx.xxx.x.xxx' WAZUH_AGENT_NAME='arch.dillon' dpkg -i ./wazuh-agent_4.14.9-1_amd64.deb
 
 I am receiving an error message saying; "sudo: dpkg: command not found"
 
