@@ -21,6 +21,8 @@ Default Wazuh VM configurations:
 
 # Deploying an agent on ArchLinux
 
+https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-linux.html
+
 Starting off with the installation, it seemed pretty straight forward since Wazuh already provides a dedicated pre-built virtual machine. 
 
   1. Install latest version of Wazuh (4.14.9)
@@ -99,3 +101,53 @@ Going back to the dashboard, it seems that the agent had successfully deployed a
 The endpoint has been successfully installed. 
 
 # Deploying an agent on Windows
+
+https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-windows.html
+
+To deploy an agent on windows I will be following the same steps as I did with my archlinux system. Though this time seems to be a lot easier. 
+
+Following the same steps the prompt is asking me to perform this command. 
+
+Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.14.9-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='xxx.xxx.x.xxx' WAZUH_AGENT_NAME='windows.dillon' 
+
+Note: You will need administrator privileges to perform this installation. Powershell 3.0 or greater is required. Keep in mind you need to run this command in a Windows Powershell terminal. 
+
+Once installation is finished - launch the agent;
+
+NET START Wazuh
+
+Both the installation prompt and the startup command worked successfully, and yet it is not appearing in my Wazuh dashboard, I will wait a few minutes in case it needs some time to register. 
+
+My first instinct is to check the manager connection between the computer and the agent. 
+
+Test-NetConnection 192.168.1.173 -Port 1514
+Test-NetConnection 192.168.1.173 -Port 1515
+
+(Ports 1514 is used for events, and Port 1515 is used for enrollment.)
+
+Both ports are open and active, meaning this could be an issue with the agent or the manager side. This command will show the agent logs and see what is failing. 
+
+Get-Service WazuhSvc
+Get-Content "C:\Program Files (x86)\ossec-agent\ossec.log" -Tail 50
+
+logs retuned as;
+
+2026/11/05 13:33:47 wazuh-agent: INFO: Trying to connect to server ([xxx.xxx.x.126]:1514/tcp).
+2026/11/05 13:34:08 wazuh-agent: ERROR: (1216): Unable to connect to '[xxx.xxx.x.126]:1514/tcp': 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.'.
+
+Immediate we see the problem, the agent is trying to connect to the IP ending with 126, and respond with nothing because nothing is there. We must reconfigure the IP to our currently active one. 
+
+In the admin powershell run;
+
+notepad "C:\Program Files (x86)\ossec-agent\ossec.conf"
+
+This command opens this file section, within it we can look under the <server> tag and manually change our IP address to the right one. 
+
+Once we change it, we save and restart the service.
+
+Restart-Service WazuhSvc
+Get-Content "C:\Program Files (x86)\ossec-agent\ossec.log" -Tail 20
+
+And now the agent is showing up on the dashboard, which mean the installation is complete. 
+
+# Integrating VirusTotal and Automation 
