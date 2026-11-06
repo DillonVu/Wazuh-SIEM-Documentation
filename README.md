@@ -150,8 +150,29 @@ Get-Content "C:\Program Files (x86)\ossec-agent\ossec.log" -Tail 20
 
 The Get-Content command gives us the logs showing that the agent has successfully started. Now the agent is showing up on the dashboard, which means the installation is complete. 
 
-# Integrating File Integrity Monitoring with Wazuh FIM
+# Integrating Wazuh File Integrity Monitoring (FIM)
 
 https://documentation.wazuh.com/current/proof-of-concept-guide/poc-file-integrity-monitoring.html
 
+Wazuh's file integrity monitoring system to quite easy to implement into the Wazuh SIEM workspace. 
+
+First, go into the Wazuh agent's /var/ossec/etc/ossec.conf configuration file using nano. 
+
+sudo nano /var/ossec/etc/ossec.conf
+
+Next, find the <syscheck> block, it is within this block we will add the directories for monitoring. Paste this in this block. (to save nano edit; ctrl + o to save, then enter to confirm filename, finally ctrl + x to exit)
+
+<directories check_all="yes" report_changes="yes" realtime="yes">/root</directories>
+
+<img width="775" height="296" alt="image" src="https://github.com/user-attachments/assets/5c1a3ce7-b645-4eb7-be73-9f33e58f2144" />
+
+In our case, we will be configuring Wazuh to monitor the /root directory. Once done, restart the agent to apply the configuration changes. 
+
+For windows we will be doing the same thing but with notepad instead. 
+
+notepad "C:\Program Files (x86)\ossec-agent\ossec.conf"
+
+<img width="623" height="150" alt="image" src="https://github.com/user-attachments/assets/92826dc2-ce6a-409d-949d-242fbc46ca55" />
+
+restart the agent to apply the configuration changes. 
 
