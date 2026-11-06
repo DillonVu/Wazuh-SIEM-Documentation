@@ -110,7 +110,7 @@ Following the same steps the prompt is asking me to perform this command.
 
 Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.14.9-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='xxx.xxx.x.xxx' WAZUH_AGENT_NAME='windows.dillon' 
 
-Note: You will need administrator privileges to perform this installation. Powershell 3.0 or greater is required. Keep in mind you need to run this command in a Windows Powershell terminal. 
+Note: You will need administrator privileges to perform this installation. Powershell 3.0 or greater is required. Keep in mind you need to run this command in a Windows PowerShell terminal. 
 
 Once installation is finished - launch the agent;
 
@@ -148,7 +148,7 @@ Once we change it, we save and restart the service.
 Restart-Service WazuhSvc
 Get-Content "C:\Program Files (x86)\ossec-agent\ossec.log" -Tail 20
 
-And now the agent is showing up on the dashboard, which mean the installation is complete. 
+The Get-Content command gives us the logs showing that the agent has successfully started. Now the agent is showing up on the dashboard, which means the installation is complete. 
 
 # Integrating File Integrity Monitoring with Wazuh FIM
 
