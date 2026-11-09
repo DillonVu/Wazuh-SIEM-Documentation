@@ -176,3 +176,16 @@ notepad "C:\Program Files (x86)\ossec-agent\ossec.conf"
 
 restart the agent to apply the configuration changes. 
 
+# Integrating VirusTotal to work with Wazuh FIM
+
+First I have to get my VirusTotal API key, all I needed to do to acquire it is to log into the VirusTotal website and go to my profile, where I was given my own API key.
+
+Then I had to go back into /var/ossec/etc/ossec.conf configuration file and add an integration block within <syscheck> in order to connect VirusTotal and Wazuh together.
+
+
+<img width="790" height="177" alt="image" src="https://github.com/user-attachments/assets/de104b16-f6b0-4aca-9c45-63e2d6c4c8c4" />
+
+
+
+
+
