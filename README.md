@@ -192,6 +192,93 @@ edit: we have changed the directories to:
 
 After restarting to the manager and agent to both apply the configuration changes I was still not able to see the events show up on the dashboard. Further troubleshooting will be taken with the assistance of Claude AI. 
 
+Once we have VirusTotal installed we can now work on getting the automated active response script to remove any flagged and harmful files. 
+
+First we must create the active response script at '/var/ossec/active-response/bin/remove-threat.sh', luckily Wazuh already provides a prebuilt script.
+
+  sudo nano /var/ossec/active-response/bin/remove-threat.sh
+
+This will create and open up the file for us to manually input the script into. 
+
+#!/bin/bash
+
+LOCAL=`dirname $0`;
+cd $LOCAL
+cd ../
+
+PWD=`pwd`
+
+read INPUT_JSON
+FILENAME=$(echo $INPUT_JSON | jq -r .parameters.alert.data.virustotal.source.file)
+COMMAND=$(echo $INPUT_JSON | jq -r .command)
+LOG_FILE="${PWD}/../logs/active-responses.log"
+
+if [ ${COMMAND} = "add" ]
+then
+ printf '{"version":1,"origin":{"name":"remove-threat","module":"active-response"},"command":"check_keys", "parameters":{"keys":[]}}\n'
+
+ read RESPONSE
+ COMMAND2=$(echo $RESPONSE | jq -r .command)
+ if [ ${COMMAND2} != "continue" ]
+ then
+  echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Remove threat active response aborted" >> ${LOG_FILE}
+  exit 0;
+ fi
+fi
+
+rm -f $FILENAME
+if [ $? -eq 0 ]; then
+ echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Successfully removed threat" >> ${LOG_FILE}
+else
+ echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Error removing threat" >> ${LOG_FILE}
+fi
+
+exit 0;
+
+After we create the file, we now have to set ownership and permissions, as well as restarting the agent to apply the new configuration changes. 
+
+  sudo chmod 750 /var/ossec/active-response/bin/remove-threat.sh
+  sudo chown root:wazuh /var/ossec/active-response/bin/remove-threat.sh
+  sudo systemctl restart wazuh-agent
+
+And then we must go into the Wazuh manger's ossec configuraiton file and register the command so that once VirusTotal flags the malicious file, the manager will be able to perform the script to remove it.
+
+  sudo nano var/ossec/etc/ossec.conf
+
+And inside all the way at the bottom, just before the closing </ossec_conif> will be where I place both my blocks. 
+
+<command>
+  <name>remove-threat</name>
+  <executable>remove-threat.sh</executable>
+  <timeout_allowed>no</timeout_allowed>
+</command>
+
+<active-response>
+  <disabled>no</disabled>
+  <command>remove-threat</command>
+  <location>local</location>
+  <rules_id>87105</rules_id>
+</active-response>
+
+<img width="394" height="245" alt="image" src="https://github.com/user-attachments/assets/84e020f7-9172-45a1-abfa-3f9884d446b0" />
+
+Then we must check the config before restarting to make sure all the changes will go smoothly. On the manager do:
+
+  sudo /var/ossec/bin/wazuh-analysisd -t
+
+Since nothing returned, all are validated meaning we can proceed with restarting the manager. Now we can perform the eicar test to see if we can visualize the event. 
+
+  curl -Lo /home/dillonv/Downloads/eicar.com https://secure.eicar.org/eicar.com
+  ls -lah /home/dillonv/Downloads/eicar.com
+
+if the download is blocked, create it locally;
+
+  echo 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' > /home/dillonv/Downloads/eicar.com
+
+Test was successful.
+
+<img width="947" height="983" alt="image" src="https://github.com/user-attachments/assets/5d193a5e-416d-43ef-9c92-d232e2d2acb3" />
+
 - Troubleshooting FIM dashboard not showing events
 
 First we must confirm if syscheck is running on the Arch endpoint. 
