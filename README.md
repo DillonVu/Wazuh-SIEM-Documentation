@@ -199,16 +199,16 @@ sudo grep -i syscheck /var/ossec/logs/ossec.log | tail -20
 
 This will output the logs of what will be happening. Then we must generate some test event in a directory we have configured with 'realtime"yes"'.
 
-# Added
+Added
 sudo touch /etc/fim_test.txt
 
-# Modified (content)
+Modified (content)
 echo "hello" | sudo tee /etc/fim_test.txt
 
-# Modified (permissions)
+Modified (permissions)
 sudo chmod 600 /etc/fim_test.txt
 
-# Deleted
+Deleted
 sudo rm /etc/fim_test.txt
 
 These three commands will prompt the creation, modification, permissions, and delete the test txt file. The purpose of this is to show if the manager catches the alert. 
